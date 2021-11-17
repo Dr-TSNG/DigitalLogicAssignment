@@ -12,7 +12,7 @@ module input_test(
 
     initial begin
         input_en = 0;
-        input_mode = 0;
+        input_mode = 1;
         weit = 0;
     end
 
