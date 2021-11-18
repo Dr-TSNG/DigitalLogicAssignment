@@ -13,6 +13,7 @@ module lock_input(
     );
     reg sec10_en;
     wire clk_sec;
+    wire clk_good;
     wire [3:0] sec10_rest;
     reg [2:0] stage;
     reg [8:1] input_trigger;
@@ -29,9 +30,10 @@ module lock_input(
     endgenerate
     
     sec_divider sec_divider(clk, clk_sec);
+    good_divider good_divider(clk, clk_good);
     sec10 sec10(clk_sec, sec10_en, sec10_rest);
 
-    always @(posedge clk) begin
+    always @(posedge clk_good) begin
         if (!en) begin
             sec10_en = 0;
             finish = 0;
@@ -43,6 +45,7 @@ module lock_input(
             sec10_en = mode;
             led_onoff_inner[7] = mode;
             led_values_inner[7] = sec10_rest;
+            if (stage == 0) user_code = 0000;
             if (sec10_rest == 0 || stage == 4) finish = 1;
             if (finish) begin
                 if (stage != 4) user_code = 0000;
