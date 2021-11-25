@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 
 
-module good_divider(
+module good2_divider(
     input clk_in,
     output reg clk_out
     );
     
-    parameter DIV = 10000000;
+    parameter DIV = 100;
     parameter T = DIV / 2 - 1;
 
     reg [30:0] cnt;

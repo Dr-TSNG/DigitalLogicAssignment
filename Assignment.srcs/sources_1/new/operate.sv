@@ -10,8 +10,11 @@ module operate(
         input [13:0] user_code,
         output reg [7:0] led_onoff,
         output reg [3:0] led_values [0:7],
-        output reg [7:0] ledtemp
+        output reg [7:0] ledtemp,
+        output reg status
     );
+reg mode1_en;
+reg mode2_en;
 reg [2:0] pre_input_mode;
 reg [13:0] user_password;
 reg [13:0] user_input;
@@ -21,22 +24,28 @@ reg count;
 integer i;
 
 Light light(light_en,clk,ledtemp,count);
+good2_divider good2_divider(clk, clk_good2);
 
 initial begin
     light_en=0;
     input_en=0;
     input_mode=0;
+    mode1_en=0;
+    mode2_en=0;
     pre_input_mode=2'd0;
-    /*led_onoff[i] = 8'bzzzzzzzz;
+    led_onoff = 8'bzzzzzzzz;
     for(i=0;i<8;i++)
         begin
             led_values[i] = 4'bzzzz;
-        end*/
+        end
+    status=0;
 end
 
-always @(posedge clk)
+always @(posedge clk_good2)
     begin
-        if(mode1 && pre_input_mode != 2'd1)
+        mode1_en=mode1;
+        mode2_en=mode2;
+        if(mode1_en && pre_input_mode != 2'd1)
             begin
                 pre_input_mode=2'd1;
                 input_mode=0;
@@ -47,8 +56,9 @@ always @(posedge clk)
                 user_password=user_code;
                 input_en=0;
                 pre_input_mode=2'd0;
+                mode1_en=0;
             end
-        /*else if(mode2 && pre_input_mode != 2'd2)
+        if(mode2_en && pre_input_mode != 2'd2)
             begin
                 pre_input_mode=2'd2;
                 input_mode=1;
@@ -59,6 +69,7 @@ always @(posedge clk)
                 user_input=user_code;
                 input_en=0;
                 pre_input_mode=2'd0;
+                status=1;
                 led_onoff = 8'bzzzzzz11;
                 if(user_input==user_password)
                     begin
@@ -75,7 +86,8 @@ always @(posedge clk)
                         for(i=0;i<8;i++)
                             led_values[i]=4'd08;
                         #3;
-                        led_onoff[i] = 8'bzzzzzzzz;
+                        status=0;
+                        led_onoff = 8'bzzzzzzzz;
                         for(i=0;i<8;i++)
                             begin
                                 led_values[i] = 4'bzzzz;
@@ -85,6 +97,8 @@ always @(posedge clk)
         else if(count==14)
             begin
                 light_en=0;
-            end*/
+                status=0;
+            end
     end
+    
 endmodule
