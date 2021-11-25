@@ -8,19 +8,22 @@ module entry(
     output [0:6] display0,
     output [0:6] display1,
     input mode1,
-    output input_finish
+    input mode2,
+    output reg[7:0] ledtemp
     );
+    
     wire [0:6] display;
+    wire input_finish;
     
     wire [7:0] led_onoff;
     wire [3:0] led_values [0:7];
 
     wire input_mode, input_en;
-    wire [13:0] user_code;
+    //wire [13:0] user_code;
 
     led_manager led_manager(clk, led_onoff, led_values, display_onoff, display);
     lock_input lock_input(clk, user_input,input_en, input_mode, input_finish, user_code, led_onoff, led_values);
-    operate operate(clk,mode1,input_en,input_mode,input_finish,user_code);
+    operate operate(clk,mode1,mode2,input_en,input_mode,input_finish,user_code,led_onoff,led_values,ledtemp);
 
     assign display0 = display;
     assign display1 = display;
