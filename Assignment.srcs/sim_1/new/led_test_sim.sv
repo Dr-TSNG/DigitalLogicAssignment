@@ -2,10 +2,16 @@
 
 
 module led_test_sim();
+    reg en;
     wire clk;
-    wire led_onoff [0:7];
-    wire [3:0] led_values [0:7];
-
+    reg [7:0] ledtemp;
+    reg [3:0] count;
+    
+    initial
+    begin
+        en=1;
+    end
+    
     clock clock(clk);
-    led_test led_test(clk, led_onoff, led_values);
+    Light light(en,clk,ledtemp,count);
 endmodule

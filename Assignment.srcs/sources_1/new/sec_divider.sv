@@ -6,8 +6,8 @@ module sec_divider(
     output reg clk_out
     );
     
-    parameter DIV = 100000;
-    //parameter DIV = 100000000;
+    //parameter DIV = 100000;
+    parameter DIV = 100000000;
     parameter T = DIV / 2 - 1;
 
     reg [30:0] cnt;
