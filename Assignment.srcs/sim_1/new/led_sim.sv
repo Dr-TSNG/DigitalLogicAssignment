@@ -13,10 +13,12 @@ module led_sim();
     wire input_finish;
     wire [13:0] user_code;
     reg [2:0] pre_input_mode;
+    reg [7:0] ledtemp;
+    reg status;
 
     clock clock(clk);
     sec_divider sec_divider(clk, clk_sec);
-    entry entry(clk, user_input, display_onoff, display0, display1, mode1, mode2);
+    entry entry(clk, user_input, display_onoff, display0, display1, mode1, mode2, ledtemp);
 
     initial begin
         mode1=0;
